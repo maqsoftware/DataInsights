@@ -76,28 +76,22 @@ module powerbi.extensibility.visual {
         public colorBy: number = 0;
     }
 
-    // tslint:disable-next-line:max-classes-per-file
     export class PresentationSettings {
         public show: boolean = false;
     }
-    // tslint:disable-next-line:max-classes-per-file
     export class LegendSettings {
         public show: boolean = false;
     }
-    // tslint:disable-next-line:max-classes-per-file
     export class XAxisSetting {
     public show: boolean = false;
 }
-    // tslint:disable-next-line:max-classes-per-file
     export class ValueSettings {
         public displayValue: string = 'outside';
     }
-    // tslint:disable-next-line:max-classes-per-file
     export class RatioSettings {
         public percent: number = 20;
     }
 
-    // tslint:disable-next-line:max-classes-per-file
     export class FontSettings {
         public fontSize: number = 12;
         public fontFamily: string = 'Segoe UI';
