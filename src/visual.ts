@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Power BI Visual CLI
  *
  *  Copyright (c) Microsoft Corporation
@@ -1019,21 +1019,20 @@ module powerbi.extensibility.visual {
          */
         private renderBrickChart(data: any, index: number, categories: any,
             prevLength: number, chartWidth: number, height: number, marginLeft: number): void {
-            debugger
-            let thisObj: this = this;
+            let thisObj: this = this, brickChart1: any, brickChart: any;
             const brick: string = 'brick';
             thisObj.$xAxisLabel.show();
             thisObj.$yAxisLabel.show();
-            let brickChart1: any, brickChart: any;
+            d3.select('.mainCont').style({'width': "calc(100% - 40px)"});
             if (thisObj.binColumn === -1) {
                 brickChart1 = thisObj.mainCont.append('div').style('margin', '30px').classed('brickChart1', true)
-                    .style({ 'text-align': 'center' }).style('margin-left', marginLeft + thisObj.px);
+                    .style({ 'text-align': 'center', 'width': "calc(100% - 40px)" }).style('margin-left', marginLeft + thisObj.px);
             } else {
                 brickChart1 = thisObj.mainCont.append('div').classed('brickChart1', true)
-                    .classed('borderChart', true).style({ 'text-align': 'center' });
+                    .classed('borderChart', true).style({ 'text-align': 'center', 'width': "calc(100% - 40px)" });
             }
             brickChart1.append('label').text(thisObj.returnLabelText(categories[index])).style('font-weight', 'bold');
-            brickChart = brickChart1.append('div').attr('class', 'brickChart').style('height', ('120px'))
+            brickChart = brickChart1.append('div').attr('class', 'brickChart').style('height', '120px')
                 .style('margin-left', marginLeft + thisObj.px)
                 .style({
                     margin: '0px',
@@ -2220,7 +2219,7 @@ module powerbi.extensibility.visual {
                 subDiv = chart.append('div').classed('subDiv', true).classed('innerdiv', true)
                     .style({
                         width: $('.chart').width() - 20 + thisObj.px,
-                        height: (Math.max((data.length * 15) + (marginBetweenBars * data.length) + labelHeight + labelMarginBottom + marginBottom, height)) + thisObj.px,
+                        height: (Math.max((data.length * 15) + (marginBetweenBars * data.length) + labelHeight + labelMarginBottom + marginBottom, height)) - 80 + thisObj.px,
                         padding: '0',
                         margin: '0'
                     });
@@ -2387,7 +2386,6 @@ module powerbi.extensibility.visual {
          */
         private returnMarginForCenter(indexCounter: number, skip: number, chartWidth: number): number {
             return indexCounter % skip === 0 ? (this.mainContWidth - (chartWidth * skip) - (10 * skip)) / 2 : 5;
-
         }
 
         /**
@@ -3579,17 +3577,19 @@ module powerbi.extensibility.visual {
          */
         private renderColumnChart(data: any, index: number, categories: any,
             chartWidth: number, chartHeight: number, marginLeft: number): void {
+            const thisObj: this = this, indexString: string = 'index';
+            d3.select('.mainCont').style({'height': "calc(100% - 80px)"});
+            thisObj.mainContHeight = thisObj.$mainCont.height() - 82;
             this.noOfColumns = data.length;
-            const thisObj: this = this, indexString: string = 'index'; thisObj.isCategory = true;
+            thisObj.isCategory = true;
             let subDiv: any, columnChart: any, subDiv1: any, mainColumnChartContainer: any;
             if (thisObj.colorByColumn !== -1) {
                 thisObj.getMaxValue(data);
             } else {
                 thisObj.getMaxValue1(data);
             }
-            const categoriesLength: number = categories.length;
+            const categoriesLength: number = categories.length, percentSign: string = '%', divWidth: number = 50;
             let subDivHeight: number, subDivWidth: number;
-            const percentSign: string = '%', divWidth: number = 50;
             const marginToFirstDiv: number = (thisObj.settings.analytics.maxLineDataLabel || thisObj.settings.analytics.minLineDataLabel ||
                 thisObj.settings.analytics.avgLineDataLabel || thisObj.settings.analytics.constantLineDataLabel) ? thisObj.textWidth + 20 : 30;
             const firstDivMargin: number = 30;
@@ -3598,8 +3598,7 @@ module powerbi.extensibility.visual {
                 subDiv = columnChart.append('div').classed('subDiv', true)
                     .style({// Updated formula to avoid extra space
                         width: (Math.max((data.length * (divWidth + 4)) + marginToFirstDiv, chartWidth - 50)) + 50 + thisObj.px,
-                        height: thisObj.mainContHeight - $('.legend1').height() - + thisObj.px, padding: '0', margin: '0',
-                        'min-height': '150px'
+                        height: thisObj.mainContHeight + thisObj.px, padding: '0', margin: '0', 'min-height': '150px'
                     });
             } else {//added one sub div for label
                 columnChart = thisObj.mainCont.append(`div`).classed('columnChart', true).classed('borderChart', true)
@@ -4308,7 +4307,7 @@ module powerbi.extensibility.visual {
             }
             if (thisObj.chartType.toLowerCase() === 'bar') {
                 if (thisObj.mainContHeight > (countOfFirstBox * chartHeight) - skip * 10) {
-                    d3.selectAll('.chart').style('height', thisObj.mainContHeight / countOfFirstBox - (60 / countOfFirstBox) + thisObj.px);
+                    d3.selectAll('.chart').style('height', thisObj.mainContHeight / countOfFirstBox - (60 / countOfFirstBox) - 80 + thisObj.px);
                     d3.selectAll('.subDiv').each(function (datum: any, index: number): void {
                         const currentHeight: number = $(this).height();
                         d3.select(this).classed(`subDiv${index}`);
@@ -4320,7 +4319,7 @@ module powerbi.extensibility.visual {
             if (thisObj.chartType.toLowerCase() === 'brick') {
                 if (thisObj.mainContHeight > (countOfFirstBox * chartHeight) - skip * 10) {
                     d3.selectAll('.brickChart').style('height', thisObj.mainContHeight / countOfFirstBox -
-                        (60 / countOfFirstBox) + thisObj.px);
+                        (60 / countOfFirstBox) - 80 + thisObj.px);
                 }
             }
             // **************TABLE********************
@@ -4741,9 +4740,11 @@ module powerbi.extensibility.visual {
         public renderChartHelperFunctionEight(thisObj, categories, binData, chartData, legendData, colorby, category, dataColumns, totalData) {
             const numberString: string = 'number';
             let finalData: any = [];
+            d3.select('.mainCont').style({'width': "calc(100% - 40px)"});
+            d3.select('.mainCont').style({'height': "calc(100% - 80px)"});
             thisObj.numberCategory = typeof categories[0] === numberString ? true : false;
             thisObj.mainContWidth = thisObj.$mainCont.width();
-            thisObj.mainContHeight = (thisObj.$mainCont.height());
+            thisObj.mainContHeight = thisObj.$mainCont.height();
             thisObj.renderLegend1();
             thisObj.globalSelections = [];
             let k: any = [];
@@ -5224,7 +5225,8 @@ module powerbi.extensibility.visual {
                         ? thisObj.height - 160 + thisObj.px : thisObj.width >= widthofTop4Elements
                             ? thisObj.height - 200 + thisObj.px : thisObj.width >= widthofTop3Elements
                                 ? thisObj.height - 216 + thisObj.px : thisObj.width >= widthofTop2Elements
-                                    ? thisObj.height - 289 + thisObj.px : thisObj.height - (widthArray.length * 40) + thisObj.px
+                                    ? thisObj.height - 289 + thisObj.px : thisObj.height - (widthArray.length * 40) + thisObj.px,
+                    width: "calc(100% - 40px)"
                 });
                 d3.select('.mainCont').style({
                     'margin-top': thisObj.width >= widthofTop9Elements

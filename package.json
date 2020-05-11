@@ -14,7 +14,7 @@
   "devDependencies": {
     "tslint": "^5.20.1",
     "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^2.7.2"
+    "typescript": "^3.0.0"
   },
   "scripts": {
     "lint": "tslint -c tslint.json -p tsconfig.json"
